@@ -4,7 +4,7 @@
 
 int main()
 {
-    // primeiro recebemos as informacoes que precisamos
+    // primeiro recebemos as informações que precisamos
     int n;
     char nome[20];
     scanf("%d %s", &n, nome);
@@ -38,6 +38,14 @@ int main()
             break;
         case 7:
             create_index(arquivo);
+            break;
+        case 8:
+            // Chama a função de busca (modularizada)
+            executa_busca_nome(arquivo);  // Aqui pode usar os arquivos de dados e índice
+            break;
+        default:
+            printf("Funcionalidade inválida.\n");
+            break;
     }
 
     // fecha o arquivo

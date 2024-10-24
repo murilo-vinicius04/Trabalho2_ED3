@@ -59,5 +59,7 @@ int insere_chave(FILE *arquivo, int RRNatual, long chave, long offset, long *cha
 
 // insere chave e referencia na arvore b
 void insere_arvore_b(FILE *arquivo, Cabecalho_indice *cabecalho, long chave, long offset);
+long buscarIndiceArvore(FILE *arquivo, int rrnAtual, long chaveBusca);
+void le_cabecalho_indice(FILE *arquivoIndice, Cabecalho_indice *cabecalho);
 
 #endif

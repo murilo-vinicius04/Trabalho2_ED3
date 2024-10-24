@@ -17,6 +17,8 @@ void remocao_logica(FILE *arquivo);
 // representa a funcionalidade (7) do trabalho
 void create_index(FILE *arquivo);
 // representa a funcionalidade (8) do trabalho
-void buca_nome(FILE *arquivo);
+void busca_nome(char *arquivoDados, char *arquivoIndice, char *nome);
+
+void executa_busca_nome(FILE *dados);
 
 #endif

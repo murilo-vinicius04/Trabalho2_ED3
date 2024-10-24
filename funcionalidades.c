@@ -183,3 +183,61 @@ void create_index(FILE *arquivo_dados)
     // por fim, chamamos o binario na tela
     binarioNaTela(nome_indice);
 }
+
+
+void executa_busca_nome(FILE *dados) {
+    char nome[50];
+    char nome_arquivo_indice[50];
+
+    // Leitura do nome do arquivo de índice
+    scanf("%s", nome_arquivo_indice);
+
+    // Abrir o arquivo de índice
+    FILE *indice = fopen(nome_arquivo_indice, "rb");
+    if (indice == NULL) {
+        printf("Falha no processamento do arquivo.\n");
+        return;
+    }
+
+    // Leitura do nome a ser buscado (ignora a palavra "nome")
+    scanf("%s", nome);
+    scan_quote_string(nome);
+
+    // Converter o nome para long usando a função fornecida
+    long chaveBusca = converteNome(nome);
+
+    if (chaveBusca == -1) {
+        printf("Registro inexistente.\n");
+        fclose(indice);
+        return;
+    }
+
+    // Ler o cabeçalho do índice para obter o RRN da raiz
+    Cabecalho_indice cabecalho;
+    le_cabecalho_indice(indice, &cabecalho);
+    int rrnRaiz = cabecalho.noRaiz;
+
+
+    // Declaração da estrutura do nó
+    No_indice no_atual;
+
+    // Realizar a busca na árvore-B
+    int PR = buscarIndiceArvore(indice, rrnRaiz, chaveBusca);
+
+    if (PR == -1) {
+        printf("Registro inexistente.\n");
+    } else {
+        // Usar posicao_encontrada para buscar o registro no arquivo de dados
+        Registro registro;
+        le_registro(&registro, dados, PR);
+        if (registro.removido == '1') {
+            printf("Registro inexistente.\n");
+        } else {
+            printa_formatado(&registro);
+        }
+    }
+
+    // Fechar o arquivo de índice
+    fclose(indice);
+}
+

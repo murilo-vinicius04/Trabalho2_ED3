@@ -53,6 +53,14 @@ void escreve_no_indice(FILE *arquivo, No_indice *no)
     fwrite(&no->filho[4], sizeof(int), 1, arquivo);
 }
 
+void le_cabecalho_indice(FILE *arquivoIndice, Cabecalho_indice *cabecalho) {
+    fseek(arquivoIndice, 0, SEEK_SET);  // Posiciona no início do arquivo
+    fread(&cabecalho->status, sizeof(char), 1, arquivoIndice);
+    fread(&cabecalho->noRaiz, sizeof(int), 1, arquivoIndice);
+    fread(&cabecalho->RRNproxNo, sizeof(int), 1, arquivoIndice);
+}
+
+
 // le no a partir de um rrn
 void le_no_indice(FILE *arquivo, int rrn, No_indice *no)
 {
@@ -308,3 +316,30 @@ void insere_arvore_b(FILE *arquivo, Cabecalho_indice *cabecalho, long chave, lon
 
     }
 }
+
+long buscarIndiceArvore(FILE *arquivo, int rrnAtual, long chaveBusca) {
+    if (rrnAtual == NIL) {
+        // Se o nó atual for NIL, significa que chegamos ao final da árvore sem encontrar a chave.
+        return -1;
+    }
+
+    // Ler o nó atual a partir do RRN (localização no arquivo)
+    No_indice no;
+    le_no_indice(arquivo, rrnAtual, &no);
+
+    // Procurar a chave dentro do nó atual
+    int i = 0;
+    while (i < no.nroChavesIndexadas && chaveBusca > no.valor[i]) {
+        i++;
+    }
+
+    // Verificar se encontramos a chave
+    if (i < no.nroChavesIndexadas && chaveBusca == no.valor[i]) {
+        // A chave foi encontrada, retornamos a referência associada a essa chave
+        return no.referencia[i];
+    }
+
+    // Caso contrário, seguimos para o filho apropriado
+    return buscarIndiceArvore(arquivo, no.filho[i], chaveBusca);
+}
+
